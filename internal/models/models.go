@@ -22,6 +22,7 @@ var roleName = map[UserRole]string {
 
 type WorkItem struct {
 	gorm.Model
+	Name 		string
 	Description string
 	SubmissionID uint 
 }
@@ -38,5 +39,6 @@ type User struct {
 	Username 	string		`gorm:"unique"`
 	Password 	string 	
 	Role		UserRole	`gorm:"default:0"`
-	Submission 	[]Submission `gorm:"foreignKey:SubmissionID"`
+	Submission 	[]Submission `gorm:"foreignKey:UserID"`
+	CreatedAt 	time.Time
 }
