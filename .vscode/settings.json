@@ -1,0 +1,14 @@
+{
+    "go.useLanguageServer": true,
+    "gopls": {
+        "ui.navigation.importShortcut": "Both",
+        "ui.completion.usePlaceholders": true,
+        "build.directoryFilters": [
+            "-node_modules"
+        ]
+    },
+    "go.formatTool": "goimports",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "always"
+    }
+}
