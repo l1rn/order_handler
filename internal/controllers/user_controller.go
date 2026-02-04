@@ -4,30 +4,24 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/l1rn/order-handler/internal/database"
-	"github.com/l1rn/order-handler/internal/models"
+	"github.com/l1rn/order-handler/internal/service"
 )
 
-type UserResponse struct {
-	Username string `json:"username"`
+type UserController struct {
+	userService service.UserService
 }
 
-func GetUsers(c *gin.Context){
-	var users []models.User
+func NewUserController(s service.UserService) *UserController {
+	return &UserController{userService: s}
+}
 
-	result := database.DB.Preload("Submission.Work").Find(&users)
+func (ctrl *UserController) GetUsers(c *gin.Context) {
+	users, err := ctrl.userService.FindAllUsers()
 
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't get all users"})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	var resp = make([]UserResponse, 0, len(users))
-	
-	for _, u := range users {
-		resp = append(resp, UserResponse{
-			Username: u.Username,
-		})
-	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, users)
 }

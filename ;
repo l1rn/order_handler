@@ -3,22 +3,23 @@ package models
 import (
 	"time"
 
+	"github.com/l1rn/order-handler/internal/models"
 	"gorm.io/gorm"
 )
 
 type UserRole int
+
+var roleName = map[models.UserRole]string{
+	RoleUser:      "user",
+	RoleModerator: "moder",
+	RoleAdmin:     "admin",
+}
 
 const (
 	RoleUser UserRole = iota
 	RoleModerator
 	RoleAdmin
 )
-
-var roleName = map[UserRole]string{
-	RoleUser:      "user",
-	RoleModerator: "moder",
-	RoleAdmin:     "admin",
-}
 
 type User struct {
 	gorm.Model

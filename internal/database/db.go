@@ -9,12 +9,11 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
-
-func InitDB() {
+func InitDB() *gorm.DB {
 	var err error
+	var db *gorm.DB
 
-	DB, err = gorm.Open(
+	db, err = gorm.Open(
 		sqlite.Open("internal/database/orders.db"),
 		&gorm.Config{},
 	)
@@ -24,7 +23,7 @@ func InitDB() {
 
 	fmt.Println("db connection established")
 
-	err = DB.AutoMigrate(
+	err = db.AutoMigrate(
 		&models.User{},
 		&models.Submission{},
 		&models.WorkItem{},
@@ -35,14 +34,15 @@ func InitDB() {
 	}
 
 	fmt.Println("db migration completed")
+	return db
 }
 
-func InitMockData() {
+func InitMockData(db *gorm.DB) {
 	var count int64
-	DB.Model(&models.User{}).Count(&count)
+	db.Model(&models.User{}).Count(&count)
 	if count == 0 {
 		sqlFile, _ := os.ReadFile("internal/database/seed.sql")
-		DB.Exec(string(sqlFile))
+		db.Exec(string(sqlFile))
 		fmt.Println("mock data initialized")
 	}
 }
