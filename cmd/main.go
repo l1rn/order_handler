@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/l1rn/order-handler/internal/controllers"
 	"github.com/l1rn/order-handler/internal/database"
@@ -18,13 +16,15 @@ func main() {
 	userService := service.NewUserService(userRepo)
 	userController := controllers.NewUserController(userService)
 
-	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-	router.GET("/users", userController.GetUsers)
-	router.Run()
+	r := gin.Default()
+
+	userRoutes := r.Group("/api/v1")
+
+	{
+		userRoutes.GET("/users", userController.GetUsers)
+		userRoutes.GET("/users/:id", userController.GetUserById)
+	}
+
+	r.Run()
 
 }

@@ -1,1 +1,4 @@
 internal/database/*.db
+*.swp
+*.swo
+

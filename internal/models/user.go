@@ -1,8 +1,10 @@
 package models
 
 import (
+	"errors"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -30,6 +32,11 @@ type User struct {
 	UpdatedAt  time.Time
 }
 
+type UserPasswordRequest struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
 type UserResponse struct {
 	ID       uint   `json:"id"`
 	Username string `json:"username"`
@@ -41,4 +48,13 @@ func (r UserRole) String() string {
 		return name
 	}
 	return "unknown"
+}
+
+func (u *User) BeforeCreate(tx *gorm.DB) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return errors.New("failed to hash password for user")
+	}
+	u.Password = string(hashedPassword)
+	return nil
 }

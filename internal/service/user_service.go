@@ -7,6 +7,7 @@ import (
 
 type UserService interface {
 	FindAllUsers() ([]models.UserResponse, error)
+	FindById(id uint) (*models.User, error)
 }
 
 type userService struct {
@@ -33,4 +34,14 @@ func (s *userService) FindAllUsers() ([]models.UserResponse, error) {
 		})
 	}
 	return response, err
+}
+
+func (s *userService) FindById(id uint) (*models.User, error) {
+	user, err := s.repo.GetById(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, err
 }

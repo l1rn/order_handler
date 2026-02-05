@@ -41,7 +41,11 @@ func InitMockData(db *gorm.DB) {
 	var count int64
 	db.Model(&models.User{}).Count(&count)
 	if count == 0 {
-		sqlFile, _ := os.ReadFile("internal/database/seed.sql")
+		sqlFile, err := os.ReadFile("internal/database/seed.sql")
+		if err != nil {
+			fmt.Println("failed to read sql file")
+			return
+		}
 		db.Exec(string(sqlFile))
 		fmt.Println("mock data initialized")
 	}
