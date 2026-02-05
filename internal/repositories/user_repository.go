@@ -1,4 +1,4 @@
-package repository
+package repositories
 
 import (
 	"errors"
@@ -47,6 +47,7 @@ func (r *userRepository) UpdatePassword(
 	oldPassword string,
 	newPassword string,
 ) error {
+
 	// db.Model(user).Update("password", newPassword)
 	return nil
 }

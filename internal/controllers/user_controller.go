@@ -5,14 +5,15 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/l1rn/order-handler/internal/service"
+	"github.com/l1rn/order-handler/internal/models"
+	"github.com/l1rn/order-handler/internal/services"
 )
 
 type UserController struct {
-	userService service.UserService
+	userService services.UserService
 }
 
-func NewUserController(s service.UserService) *UserController {
+func NewUserController(s services.UserService) *UserController {
 	return &UserController{userService: s}
 }
 
@@ -44,4 +45,23 @@ func (ctrl *UserController) GetUserById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+}
+
+func (ctrl *UserController) CreateUser(c *gin.Context){
+	var req models.CreateUserRequest
+	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request body",
+			"details": err.Error(),
+		})
+		return
+	}
+
+	err := ctrl.userService.CreateUser(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User created!"})
 }

@@ -32,6 +32,11 @@ type User struct {
 	UpdatedAt  time.Time
 }
 
+type CreateUserRequest struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 type UserPasswordRequest struct {
 	OldPassword string `json:"oldPassword"`
 	NewPassword string `json:"newPassword"`
@@ -41,6 +46,7 @@ type UserResponse struct {
 	ID       uint   `json:"id"`
 	Username string `json:"username"`
 	Role     string `json:"role"`
+	Password string `json:"password"`
 }
 
 func (r UserRole) String() string {
@@ -56,5 +62,16 @@ func (u *User) BeforeCreate(tx *gorm.DB) error {
 		return errors.New("failed to hash password for user")
 	}
 	u.Password = string(hashedPassword)
+	return nil
+}
+
+func (u *User) BeforeUpdate(tx *gorm.DB) error {
+	if tx.Statement.Changed("password") {
+		pwd, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return errors.New("failte to hash password for user")
+		}
+		u.Password = string(pwd)
+	}
 	return nil
 }

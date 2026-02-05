@@ -1,20 +1,21 @@
-package service
+package services
 
 import (
 	"github.com/l1rn/order-handler/internal/models"
-	"github.com/l1rn/order-handler/internal/repository"
+	"github.com/l1rn/order-handler/internal/repositories"
 )
 
 type UserService interface {
 	FindAllUsers() ([]models.UserResponse, error)
 	FindById(id uint) (*models.User, error)
+	CreateUser(req models.CreateUserRequest) error
 }
 
 type userService struct {
-	repo repository.UserRepository
+	repo repositories.UserRepository
 }
 
-func NewUserService(repo repository.UserRepository) UserService {
+func NewUserService(repo repositories.UserRepository) UserService {
 	return &userService{repo: repo}
 }
 
@@ -31,6 +32,7 @@ func (s *userService) FindAllUsers() ([]models.UserResponse, error) {
 			ID:       u.ID,
 			Username: u.Username,
 			Role:     u.Role.String(),
+			Password: u.Password,
 		})
 	}
 	return response, err
@@ -44,4 +46,14 @@ func (s *userService) FindById(id uint) (*models.User, error) {
 	}
 
 	return user, err
+}
+
+func (s *userService) CreateUser(req models.CreateUserRequest) error {
+	user := models.User{
+		Username: req.Username,
+		Password: req.Password,
+		Role:     1,
+	}
+
+	return s.repo.Create(&user)
 }
