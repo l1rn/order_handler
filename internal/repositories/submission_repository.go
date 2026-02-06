@@ -19,6 +19,6 @@ func NewSubmissionRepository(db *gorm.DB) SubmissionRepository {
 
 func (r *submissionRepository) GetAll() ([]models.Submission, error) {
 	var subs []models.Submission
-	err := r.db.Find(&subs).Error
+	err := r.db.Preload("User").Preload("WorkItems").Find(&subs).Error
 	return subs, err
 }

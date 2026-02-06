@@ -32,7 +32,6 @@ func (s *workService) FindAllWorkItems() ([]models.WorkItemResponse, error) {
 			ID:           w.ID,
 			Name:         w.Name,
 			Desc:         w.Description,
-			SubmissionID: w.SubmissionID,
 		})
 	}
 	return response, err
@@ -42,7 +41,6 @@ func (s *workService) CreateWorkItem(req models.CreateWorkItemRequest) error {
 	workItem := models.WorkItem{
 		Name:         *req.Name,
 		Description:  *req.Desc,
-		SubmissionID: req.SubmissionID,
 	}
 
 	return s.repo.Create(&workItem)
@@ -58,8 +56,6 @@ func (s *workService) UpdateWorkItem(id uint, req models.CreateWorkItemRequest) 
 	if req.Desc != nil {
 		updatedData["description"] = *req.Desc
 	}
-
-	updatedData["submission_id"] = req.SubmissionID
 
 	return s.repo.Update(id, updatedData)
 }

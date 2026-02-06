@@ -24,12 +24,12 @@ var roleName = map[UserRole]string{
 
 type User struct {
 	gorm.Model
-	Username   string       `gorm:"unique"`
-	Password   string       `gorm:"not null"`
-	Role       UserRole     `gorm:"default:0"`
+	Username   string       `gorm:"unique";json:"username"`
+	Password   string       `gorm:"not null";json:"password"`
+	Role       UserRole     `gorm:"default:0";json:"role"`
 	Submission []Submission `gorm:"foreignKey:UserID"`
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	CreatedAt  time.Time    `json:"created_at"`
+	UpdatedAt  time.Time    `json:"updated_at"`
 }
 
 type CreateUserRequest struct {

@@ -10,7 +10,7 @@ import (
 
 func main() {
 	db := database.InitDB()
-	database.InitMockData(db)
+	database.SeedData(db)
 
 	userRepo := repositories.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
@@ -19,6 +19,10 @@ func main() {
 	workRepo := repositories.NewWorkRepository(db)
 	workService := services.NewWorkService(workRepo)
 	workController := controllers.NewWorkController(workService)
+
+	submissionRepo := repositories.NewSubmissionRepository(db)
+	submissionService := services.NewSubmissionService(submissionRepo)
+	submissionController := controllers.NewSubmissionController(submissionService)
 
 	r := gin.Default()
 
@@ -36,6 +40,12 @@ func main() {
 		workRoutes.GET("", workController.GetAll)
 		workRoutes.POST("", workController.CreateWorkItem)
 		workRoutes.PUT("/:id", workController.UpdateWorkItem)
+	}
+
+	subRoutes := r.Group("/api/v1/submissions")
+
+	{
+		subRoutes.GET("", submissionController.GetSubmissions)
 	}
 	r.Run()
 }

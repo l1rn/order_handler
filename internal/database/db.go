@@ -50,3 +50,31 @@ func InitMockData(db *gorm.DB) {
 		fmt.Println("mock data initialized")
 	}
 }
+
+func SeedData(db *gorm.DB) {
+	var count int64
+	db.Model(&models.User{}).Count(&count)
+
+	if count == 0 {
+		work1 := models.WorkItem{Name: "test work item", Description: "desc"}
+		work2 := models.WorkItem{Name: "test work item 2", Description: "desc"}
+
+		db.Create(&work1)
+		db.Create(&work2)
+
+		admin := models.User{
+            Username: "admin1",
+            Password: "password123", 
+            Role:     models.RoleAdmin,
+        }
+        db.Create(&admin)
+
+		submission := models.Submission{
+            UserID:    admin.ID,
+            WorkItems: []models.WorkItem{work1, work2},
+        }
+        db.Create(&submission)
+
+        fmt.Println("Mock data seeded successfully.")
+	}
+}

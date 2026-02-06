@@ -9,6 +9,13 @@ import (
 type Submission struct {
 	gorm.Model
 	UserID         uint
-	Work           []WorkItem `gorm:"foreignKey:SubmissionID"`
+	User           User       `gorm:"foreignKey:UserID"`
+	WorkItems      []WorkItem `gorm:"many2many"`
 	SubmissionDate time.Time
+}
+
+type SubmissionResponse struct {
+	User            UserResponse       `json:"user"`
+	WorkItems       []WorkItemResponse `json:"work-items"`
+	SumbmissionDate time.Time          `json:"date"`
 }
