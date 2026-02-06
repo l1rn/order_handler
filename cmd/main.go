@@ -35,6 +35,7 @@ func main() {
 	{
 		workRoutes.GET("", workController.GetAll)
 		workRoutes.POST("", workController.CreateWorkItem)
+		workRoutes.PUT("/:id", workController.UpdateWorkItem)
 	}
 	r.Run()
 }

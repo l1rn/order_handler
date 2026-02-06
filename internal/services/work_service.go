@@ -8,6 +8,7 @@ import (
 type WorkService interface {
 	FindAllWorkItems() ([]models.WorkItemResponse, error)
 	CreateWorkItem(req models.CreateWorkItemRequest) error
+	UpdateWorkItem(id uint, req models.CreateWorkItemRequest) error
 }
 
 type workService struct {
@@ -39,10 +40,26 @@ func (s *workService) FindAllWorkItems() ([]models.WorkItemResponse, error) {
 
 func (s *workService) CreateWorkItem(req models.CreateWorkItemRequest) error {
 	workItem := models.WorkItem{
-		Name:         req.Name,
-		Description:  req.Desc,
+		Name:         *req.Name,
+		Description:  *req.Desc,
 		SubmissionID: req.SubmissionID,
 	}
 
 	return s.repo.Create(&workItem)
+}
+
+func (s *workService) UpdateWorkItem(id uint, req models.CreateWorkItemRequest) error {
+	updatedData := make(map[string]interface{})
+
+	if req.Name != nil {
+		updatedData["name"] = *req.Name
+	}
+
+	if req.Desc != nil {
+		updatedData["description"] = *req.Desc
+	}
+
+	updatedData["submission_id"] = req.SubmissionID
+
+	return s.repo.Update(id, updatedData)
 }

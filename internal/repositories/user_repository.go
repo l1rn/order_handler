@@ -43,13 +43,10 @@ func (r *userRepository) Delete(user *models.User) error {
 }
 
 func (r *userRepository) UpdatePassword(
-	user *models.User,
-	oldPassword string,
-	newPassword string,
+	id uint,
+	data map[string]interface{},
 ) error {
-
-	// db.Model(user).Update("password", newPassword)
-	return nil
+	return r.db.Model(&models.User{}).Where("id = ?", id).Updates(data).Error
 }
 
 func (r *userRepository) BeforeDelete(user *models.User) error {

@@ -17,7 +17,7 @@ type WorkItemResponse struct {
 }
 
 type CreateWorkItemRequest struct {
-	Name         string `json:"name"`
-	Desc         string `json:"desc"`
+	Name         *string `json:"name"`
+	Desc         *string `json:"desc"`
 	SubmissionID uint   `json:"submission_id"`
 }

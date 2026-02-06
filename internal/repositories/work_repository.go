@@ -10,6 +10,7 @@ import (
 type WorkRepository interface {
 	GetAll() ([]models.WorkItem, error)
 	Create(w *models.WorkItem) error
+	Update(id uint, data map[string]interface{}) error
 }
 
 type workRepository struct {
@@ -33,4 +34,11 @@ func (r *workRepository) GetAll() ([]models.WorkItem, error) {
 
 func (r *workRepository) Create(w *models.WorkItem) error {
 	return r.db.Create(w).Error
+}
+
+func (r *workRepository) Update(
+	id uint,
+	data map[string]interface{},
+) error {
+	return r.db.Model(&models.WorkItem{}).Where("id = ?", id).Updates(data).Error
 }
