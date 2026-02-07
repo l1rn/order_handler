@@ -15,6 +15,7 @@ type Submission struct {
 }
 
 type SubmissionResponse struct {
+	ID              uint               `json:"id"`
 	User            UserResponse       `json:"user"`
 	WorkItems       []WorkItemResponse `json:"work-items"`
 	SumbmissionDate time.Time          `json:"date"`

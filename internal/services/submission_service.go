@@ -7,6 +7,8 @@ import (
 
 type SubmissionService interface {
 	FindAllUsers() ([]models.SubmissionResponse, error)
+	AddWorkItemToSubmission(id uint, wi_id uint) error
+	DeleteWorkItemToSubmission(id uint, wi_id uint) error
 }
 
 type submissionService struct {
@@ -37,6 +39,7 @@ func (s *submissionService) FindAllUsers() ([]models.SubmissionResponse, error) 
 		}
 
 		response = append(response, models.SubmissionResponse{
+			ID: s.ID,
 			User: models.UserResponse{
 				ID:       s.User.ID,
 				Username: s.User.Username,
@@ -49,4 +52,20 @@ func (s *submissionService) FindAllUsers() ([]models.SubmissionResponse, error) 
 	}
 
 	return response, nil
+}
+
+func (s *submissionService) AddWorkItemToSubmission(id uint, wi_id uint) error {
+	err := s.repo.AddWorkItem(id, wi_id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *submissionService) DeleteWorkItemToSubmission(id uint, wi_id uint) error {
+	err := s.repo.DeleteWorkItem(id, wi_id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

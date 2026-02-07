@@ -46,6 +46,7 @@ func main() {
 
 	{
 		subRoutes.GET("", submissionController.GetSubmissions)
+		subRoutes.POST("/add-work/", submissionController.AddWorkItem)
 	}
-	r.Run()
+	r.Run(":8081")
 }

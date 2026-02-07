@@ -2,3 +2,12 @@ internal/database/*.db
 *.swp
 *.swo
 
+gateway/logs/*
+gateway/logs
+
+gateway/proxy_temp/
+gateway/scgi_temp/
+gateway/uwsgi_temp/
+gateway/fastcgi_temp/
+gateway/client_body_temp/
+

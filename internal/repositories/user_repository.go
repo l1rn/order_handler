@@ -30,7 +30,7 @@ func (r *userRepository) GetAll() ([]models.User, error) {
 
 func (r *userRepository) GetById(id uint) (*models.User, error) {
 	var user *models.User
-	err := r.db.First(&user).Error
+	err := r.db.First(&user, id).Error
 	return user, err
 }
 
