@@ -8,7 +8,7 @@ import (
 type UserService interface {
 	FindAllUsers() ([]models.UserResponse, error)
 	FindById(id uint) (*models.User, error)
-	CreateUser(req models.CreateUserRequest) error
+	CreateUser(req models.CreateUserRequest) (uint, error)
 }
 
 type userService struct {
@@ -48,12 +48,12 @@ func (s *userService) FindById(id uint) (*models.User, error) {
 	return user, err
 }
 
-func (s *userService) CreateUser(req models.CreateUserRequest) error {
+func (s *userService) CreateUser(req models.CreateUserRequest) (uint, error) {
 	user := models.User{
 		Username: req.Username,
 		Password: req.Password,
 		Role:     1,
 	}
-
-	return s.repo.Create(&user)
+	err := s.repo.Create(&user)
+	return user.ID, err
 }

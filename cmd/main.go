@@ -24,6 +24,8 @@ func main() {
 	submissionService := services.NewSubmissionService(submissionRepo)
 	submissionController := controllers.NewSubmissionController(submissionService)
 
+	authController := controllers.NewAuthController(userService)
+
 	r := gin.Default()
 
 	userRoutes := r.Group("/api/v1/users")
@@ -47,6 +49,11 @@ func main() {
 	{
 		subRoutes.GET("", submissionController.GetSubmissions)
 		subRoutes.POST("/add-work/", submissionController.AddWorkItem)
+	}
+
+	authRoutes := r.Group("/api/v1/auth")
+	{
+		authRoutes.POST("/sign-up", authController.Register)
 	}
 	r.Run(":8081")
 }

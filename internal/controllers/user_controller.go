@@ -47,17 +47,17 @@ func (ctrl *UserController) GetUserById(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func (ctrl *UserController) CreateUser(c *gin.Context){
+func (ctrl *UserController) CreateUser(c *gin.Context) {
 	var req models.CreateUserRequest
 	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request body",
+			"error":   "Invalid request body",
 			"details": err.Error(),
 		})
 		return
 	}
 
-	err := ctrl.userService.CreateUser(req)
+	_, err := ctrl.userService.CreateUser(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
