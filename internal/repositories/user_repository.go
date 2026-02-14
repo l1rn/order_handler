@@ -10,6 +10,7 @@ import (
 type UserRepository interface {
 	GetAll() ([]models.User, error)
 	GetById(id uint) (*models.User, error)
+	GetByUsername(username string) (*models.User, error)
 	Create(*models.User) error
 	Delete(*models.User) error
 }
@@ -31,6 +32,12 @@ func (r *userRepository) GetAll() ([]models.User, error) {
 func (r *userRepository) GetById(id uint) (*models.User, error) {
 	var user *models.User
 	err := r.db.First(&user, id).Error
+	return user, err
+}
+
+func (r *userRepository) GetByUsername(username string) (*models.User, error) {
+	var user *models.User
+	err := r.db.Where("username = ?", username).First(&user).Error	
 	return user, err
 }
 

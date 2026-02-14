@@ -25,14 +25,16 @@ var roleName = map[UserRole]string{
 type User struct {
 	gorm.Model
 	Username   string       `gorm:"unique";json:"username"`
-	Password   string       `gorm:"not null";json:"password"`
+	Password   string       `json:"password"`
 	Role       UserRole     `gorm:"default:0";json:"role"`
 	Submission []Submission `gorm:"foreignKey:UserID"`
+	Email      string       `gorm:uniqueIndex;json:"email"`
+	GoogleID   string       `gorm:uniqueIndex;json:"google_id"`
 	CreatedAt  time.Time    `json:"created_at"`
 	UpdatedAt  time.Time    `json:"updated_at"`
 }
 
-type CreateUserRequest struct {
+type UserRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
